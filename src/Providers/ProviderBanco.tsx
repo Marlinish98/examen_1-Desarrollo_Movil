@@ -9,7 +9,7 @@ export default function ProviderBanco(props: Vista) {
 
     const [datosPersona, setDatosPersonas] = useState<DatosPersonas[]>([])
 
-    function depositarSaldo() {
+    function depositarDinero() {
 
         setSaldo(prev => prev + 500)
 
@@ -36,7 +36,7 @@ export default function ProviderBanco(props: Vista) {
             ncuenta: 12345678,
             nombre: "Marlon Martinez",
             motivo:"Retiro de mi cuenta",
-            monto: 2000
+            monto: 200
         }
 
         setDatosPersonas(prev => [
@@ -75,7 +75,7 @@ export default function ProviderBanco(props: Vista) {
                 saldo,
                 datosPersona,
                 retirarDinero,
-                depositarSaldo,
+                depositarDinero,
                 transferirSaldo
             }}
         >
