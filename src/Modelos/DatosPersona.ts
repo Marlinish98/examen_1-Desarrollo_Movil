@@ -1,3 +1,7 @@
 export interface DatosPersonas{
-   saldo: number;
+   id: number;
+    ncuenta: number;
+    nombre: string;
+    monto: number;
+    motivo?:string;
 }

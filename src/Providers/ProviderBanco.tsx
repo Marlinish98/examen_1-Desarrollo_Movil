@@ -1,57 +1,89 @@
-import { View, Text } from 'react-native'
 import React, { useContext, useState } from 'react'
-import { Vista } from '../Modelos/Vista';
-import { DatosPersonas } from '../Modelos/DatosPersona';
-import { contextBanco } from '../Context/ContextBanco';
+import { Vista } from '../Modelos/Vista'
+import { DatosPersonas } from '../Modelos/DatosPersona'
+import { contextBanco } from '../Context/ContextBanco'
 
 export default function ProviderBanco(props: Vista) {
 
-    const [datos, setDatos] =useState<DatosPersonas>({saldo: 10000});
+    const [saldo, setSaldo] = useState(10000)
 
-    const [transacciones, setTransacciones] =useState<string[]>([]);
+    const [datosPersona, setDatosPersonas] = useState<DatosPersonas[]>([])
 
     function depositarSaldo() {
-        setDatos({
-            saldo: datos.saldo + 500
-        });
 
-        setTransacciones([
-            ...transacciones,
-            "Deposito realizado de L.500"
-        ]);
-    }
+        setSaldo(prev => prev + 500)
 
-    function transferirSaldo(monto:number, nombre:string, Ncuenta:number) {
-
-        if (monto > datos.saldo) {
-
-            alert(
-                "Saldo insuficiente pa completar la transacción"
-            );
-
-            return;
+        const nuevaTransaccion: DatosPersonas = {
+            id: Date.now(),
+            ncuenta: 12345678,
+            nombre: "Marlon Martinez",
+            motivo:"Deposito en mi cuenta",
+            monto: 500
         }
 
-        setDatos({
-            saldo: datos.saldo - monto
-        });
-
-        setTransacciones([
-            ...transacciones,
-            `Transferencia de L.${monto} a ${nombre}`
-        ]);
-
-        alert("Transferencia exitosa");
+        setDatosPersonas(prev => [
+            ...prev,
+            nuevaTransaccion
+        ])
     }
+
+     function retirarDinero() {
+
+        setSaldo(prev => prev - 200)
+
+        const nuevaTransaccion: DatosPersonas = {
+            id: Date.now(),
+            ncuenta: 12345678,
+            nombre: "Marlon Martinez",
+            motivo:"Retiro de mi cuenta",
+            monto: 2000
+        }
+
+        setDatosPersonas(prev => [
+            ...prev,
+            nuevaTransaccion
+        ])
+    }
+
+  function transferirSaldo(monto: number, nombre: string, Ncuenta: number) {
+
+    if (monto > saldo) {
+        alert("Saldo insuficiente para completar la transacción")
+        return false
+    }
+
+    setSaldo(prev => prev - monto)
+
+    const nuevaTransaccion = {
+        id: Date.now(),
+        ncuenta: Ncuenta,
+        nombre,
+        monto,
+        tipo: "Transferencia"
+    }
+
+    setDatosPersonas(prev => [...prev, nuevaTransaccion])
+
+    alert("Transferencia exitosa")
+
+    return true
+}
 
     return (
         <contextBanco.Provider
-            value={{datos,transacciones,depositarSaldo,transferirSaldo,}}>
+            value={{
+                saldo,
+                datosPersona,
+                retirarDinero,
+                depositarSaldo,
+                transferirSaldo
+            }}
+        >
             {props.children}
         </contextBanco.Provider>
-    );
+    )
 }
 
 export function useContextBanco() {
-    return useContext(contextBanco);
+    return useContext(contextBanco)
 }

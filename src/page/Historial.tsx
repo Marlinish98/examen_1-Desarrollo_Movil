@@ -1,36 +1,36 @@
-import React from 'react';
-
-import {
-    View,
-    Text,
-    FlatList
-} from 'react-native';
-
-import {
-    useContextBanco
-} from '../Providers/ProviderBanco';
+import React from 'react'
+import { View, Text, FlatList } from 'react-native'
+import { useContextBanco } from '../Providers/ProviderBanco'
 
 export default function Historial() {
 
-    const { transacciones } =
-        useContextBanco();
+    const { datosPersona } = useContextBanco()
 
     return (
 
         <View style={{ padding: 20 }}>
 
-            <Text>
-                Total de transacciones:
-                {transacciones.length}
+            <Text style={{ fontWeight: 'bold', marginBottom: 10 }}>
+                Total de transacciones: {datosPersona.length}
             </Text>
 
             <FlatList
-                data={transacciones}
+                data={datosPersona}
+                keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    <Text>{item}</Text>
+                    <View style={{
+                        padding: 10,
+                        borderBottomWidth: 1,
+                        borderColor: '#eee'
+                    }}>
+                        <Text>N° Cuenta: {item.ncuenta}</Text>
+                        <Text>Nombre de la Cuenta: {item.nombre}</Text>
+                        <Text>Monto: L. {item.monto}</Text>
+                        <Text>{item.motivo}</Text>
+                    </View>
                 )}
             />
 
         </View>
-    );
+    )
 }

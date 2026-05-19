@@ -4,11 +4,12 @@ import { useContextBanco } from '../Providers/ProviderBanco'
 
 export default function Transferencia() {
 
-    const { transferirSaldo } = useContextBanco()
+    const { transferirSaldo,saldo } = useContextBanco()
 
     const [nombre, setNombre] = useState('')
     const [monto, setMonto] = useState('')
     const [ncuenta, setNcuenta] = useState('')
+    
 
     return (
         <View style={styles.container}>
@@ -36,16 +37,35 @@ export default function Transferencia() {
                 onChangeText={setMonto}
             />
 
-            <Button
-                title='Transferir'
-                onPress={() =>
-                    transferirSaldo(
-                        Number(monto),
-                        nombre,
-                        Number(ncuenta)
-                    )
-                }
-            />
+         <Button
+  title="Transferir"
+  onPress={() => {
+    if (!nombre.trim() || !monto.trim() || !ncuenta.trim()) {
+      alert("Todos los campos son obligatorios")
+      return;
+    }
+
+    if (Number(monto) <= 0) {
+      alert("Monto inválido")
+      return;
+    }
+
+    if (Number(monto) > saldo) {
+      alert("Saldo insuficiente")
+      return;
+    }
+
+    transferirSaldo(
+      Number(monto),
+      nombre,
+      Number(ncuenta)
+    );
+
+    setNombre('');
+    setMonto('');
+    setNcuenta('');
+  }}
+/>
 
         </View>
     )
